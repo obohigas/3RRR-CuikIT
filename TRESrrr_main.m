@@ -2,11 +2,11 @@
 
 
 %load ROBOTICS TOOLBOX by P. CORKE
-cd('/Users/obohigas/IRI/rvctools');
-startup_rvc;
+%cd('/Users/obohigas/IRI/rvctools');
+%startup_rvc;
 
 % set current folder
-cd('/Users/obohigas/IRI/3RRR_Cuik-IT');
+cd('/Users/obohigas/IRI/3RRR-CuikIT');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % GRAPHICS INITIALIZATION
@@ -106,10 +106,7 @@ end
 set(platform,'xdata',[b1(1) b2(1) b3(1) b1(1)],'ydata',[b1(2) b2(2) b3(2) b1(2)]);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-filename = '3rrr_free';
-%follow_path;
-
-% select start
+%% select start
 q_start = line('color','c','marker','o','xdata',100,'ydata',100);
 [n_start,x_start,y_start] = g.pick();
 set(q_start,'xdata',x_start,'ydata',y_start);
@@ -119,12 +116,19 @@ q_goal = line('color','g','marker','o','xdata',100,'ydata',100);
 [n_goal,x_goal,y_goal] = g.pick();
 set(q_goal,'xdata',x_goal,'ydata',y_goal);
 
-% compute path
-path = g.Astar(n_start,n_goal);
+% compute path as ordered list of nodes
+path_nodes = g.Astar(n_start,n_goal);
 
 % plot path
-g.highlight_path(path,'NodeSize',1,'EdgeColor',[1 0.5 0]);
+g.highlight_path(path_nodes,'NodeSize',1,'EdgeColor',[1 0.5 0]);
 
+path_real = zeros(9,length(path_nodes));
+% get real path (variables of interest)
+for i=1:length(path_nodes)
+    path_real(:,i) = g.coord(path_nodes(i));
+end
+
+follow_path;
 
 
 

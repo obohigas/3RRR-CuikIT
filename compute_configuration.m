@@ -11,9 +11,9 @@ L2 = geometry.L2;
 theta1 = angles(1);
 theta2 = angles(2);
 theta3 = angles(3);
-abs1 = angles(4)+theta1;
-abs2 = angles(5)+theta2;
-abs3 = angles(6)+theta3;
+abs1 = angles(4);%+theta1;
+abs2 = angles(5);%+theta2;
+abs3 = angles(6);%+theta3;
 
 c1 = a1 + L1*[cos(theta1);sin(theta1)];
 c2 = a2 + L1*[cos(theta2);sin(theta2)];

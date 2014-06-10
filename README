@@ -1,1 +1,4 @@
 Matlab code to control 3RRR 3D-printed parallel manipulator at IRI
+by obohigas
+
+dependencies: Matlab robotics toolbox by P. Corke

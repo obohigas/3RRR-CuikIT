@@ -106,7 +106,7 @@ R = [ cos(phi), -sin(phi); sin(phi), cos(phi)];
    end;
  end;
 
-% PLOT THE CONSTANT-ORIENTATION WORKSPACE---------------------------------------
+% CONSTANT-ORIENTATION WORKSPACE---------------------------------------
  % initialize workspace array
  X_wsp = []; Y_wsp = [];
  for i = 1:3,
@@ -117,7 +117,7 @@ R = [ cos(phi), -sin(phi); sin(phi), cos(phi)];
        if (ang1 > ang2),
          ang = [ang1:0.01:2*pi, 0:0.01:ang2];
        else
-	 ang = [ang1:0.01:ang2];
+	   ang = [ang1:0.01:ang2];
        end;
        ang(end+1) = ang2(end);
        X_wsp = [X_wsp, circle{i}(ii).geom(1)+circle{i}(ii).geom(3)* ...

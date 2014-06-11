@@ -42,9 +42,9 @@ phi = 0:delta:2*pi;
 for i=1:length(phi)
     [X_workspace,Y_workspace] = compute_workspace(phi(i),geometry);
     workspaces{i} = [X_workspace;Y_workspace];
-    set(workspace,'xdata',X_workspace,'ydata',Y_workspace);
-    drawnow;
-    pause(0.05);
+    %set(workspace,'xdata',X_workspace,'ydata',Y_workspace);
+    %drawnow;
+    %pause(0.05);
 end
 disp('fet');
 

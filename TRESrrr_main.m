@@ -19,7 +19,7 @@ axis off;
 %subplot('Position', [0.01 0.01 0.99 0.99]);
 axes('position', [-0.135 0.01 0.98 0.98])
 axis equal; 
-axis([-20 40 -20 40]); %grid;
+axis([11.75-20 11.75+20 20.35/2-22.5 20.35/2+17.5]); %grid;
 set(gca,'XTick',[],'YTick',[]);
 box on;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -92,6 +92,8 @@ leg2 = line('color','b');
 leg3 = line('color','b');
 base = line('color','k','marker','o','linestyle','none');
 set(base,'xdata',[a1(1) a2(1) a3(1)],'ydata',[a1(2) a2(2) a3(2)]); % this is set here because its constant, no need to update
+q_start = line('color','c','marker','o','xdata',100,'ydata',100);
+q_goal = line('color','g','marker','o','xdata',100,'ydata',100);
 
 plot_configuration;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,43 +101,30 @@ plot_configuration;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONTROLS
-slider_phi = uicontrol(fig,'Style','slider','Pos',[600 150 200 17],...
+slider_phi = uicontrol(fig,'Style','slider','Pos',[615 400 220 17],...
    'Min',0,'Max',360,'SliderStep',[1/360 1/360],...
-   'Val',0,'CallBack',['phi=get(slider_phi,''Val'')*pi/180;'...
-   '[p,b1,b2,b3,c1,c2,c3] = compute_configuration_from_xyphi(p(1),p(2),phi,mode,geometry);'...
-   'plot_configuration;']);
+   'Val',0,'CallBack','slider_phi_function;');
 
-%% select start
-phi = 0; % for now, constant orientation
+slider_current = uicontrol(fig,'Style','text','Pos',[707 420 35 17],...
+    'String',num2str(get(slider_phi,'Value')),...
+    'BackgroundColor','w');
 
-q_start = line('color','c','marker','o','xdata',100,'ydata',100);
-[n_start,x_start,y_start] = g.pick();
-set(q_start,'xdata',x_start,'ydata',y_start);
-[p,b1,b2,b3,c1,c2,c3] = compute_configuration_from_xyphi(x_start,y_start,phi,mode,geometry);
-plot_configuration;
+pick_conf = uicontrol(fig,'Style','push','Pos',[615 250 65 30],...
+   'String','pick conf','CallBack','pick_conf_function;');
 
-% select goal
-q_goal = line('color','g','marker','o','xdata',100,'ydata',100);
-[n_goal,x_goal,y_goal] = g.pick();
-set(q_goal,'xdata',x_goal,'ydata',y_goal);
-[p,b1,b2,b3,c1,c2,c3] = compute_configuration_from_xyphi(x_start,y_start,phi,mode,geometry);
-plot_configuration;
+set_start = uicontrol(fig,'Style','push','Pos',[690 270 65 30],...
+   'String','set start','CallBack','set_start_function;');
 
-% compute path as ordered list of nodes
-path_nodes = g.Astar(n_start,n_goal);
+set_goal = uicontrol(fig,'Style','push','Pos',[690 230 65 30],...
+   'String','set goal','CallBack','set_goal_function;');
 
-% plot path
-g.highlight_path(path_nodes,'NodeSize',4,'EdgeColor',[1 0.5 0]);
+run_path = uicontrol(fig,'Style','push','Pos',[765 250 65 30],...
+   'String','run path','CallBack','run_path_function;');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-path_real = zeros(9,length(path_nodes));
-% get real path (variables of interest)
-for i=1:length(path_nodes)
-    path_real(:,i) = g.coord(path_nodes(i));
-end
+%%
 
+filename='3rrr_free';
 follow_path;
-
-
-
 
 

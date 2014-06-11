@@ -1,4 +1,8 @@
 function [p,b1,b2,b3,c1,c2,c3,phi] = compute_configuration(angles,geometry)
+% compute configuration from values provided by the physical platform,
+% namely absolute angles at the motors and relative angles at the
+% intermediate joints (NOW IT ASSUMES ABSOLUTE ANGLES AT THE INTERMEDIATE
+% JOINTS ARE GIVEN)
 
 a1 = geometry.base(:,1);
 a2 = geometry.base(:,2);

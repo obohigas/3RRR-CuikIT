@@ -25,7 +25,6 @@ box on;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BONEV'S GEOMETRIC PARAMETERS
 a1 = [0     0]';
@@ -71,38 +70,56 @@ geometry.L1 = L1;
 geometry.L2 = L2;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-atlas = read_atlas('3rrr.atlas');
-g = atlas2graph(atlas);
+%atlas = read_atlas('3rrr.atlas');
+%g = atlas2graph(atlas);
 delta_ws = 0.01;
 delta_sing = 2*pi/360;
-load('workspaces','workspaces');
-load('singularities','singularities');
+%load('workspaces','workspaces');
+%load('singularities','singularities');
+eps_valid = 1e-5;
  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PLOT OBJECTS
+% (order of creation of each object --> depth in the plot, first created is
+% in the back, last created in the front)
+workspace = line('color',[0.7,0.7,0.7],'LineStyle','-','linewidth',2);
+sings = line('color','r','LineStyle','.','markersize',5);
 platform = line('color',[.5,0,0],'LineWidth',1);
 P = line('color','k','marker','*');
-base = line('color','k','marker','o','linestyle','none');
-set(base,'xdata',[a1(1) a2(1) a3(1)],'ydata',[a1(2) a2(2) a3(2)]); % this is set here because its constant, no need to update
 leg1 = line('color','b');
 leg2 = line('color','b');
 leg3 = line('color','b');
-workspace = line('color',[0.7,0.7,0.7],'LineStyle','-','linewidth',2);
-sings = line('color','r','LineStyle','.','markersize',5);
+base = line('color','k','marker','o','linestyle','none');
+set(base,'xdata',[a1(1) a2(1) a3(1)],'ydata',[a1(2) a2(2) a3(2)]); % this is set here because its constant, no need to update
 
 plot_configuration;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CONTROLS
+slider_phi = uicontrol(fig,'Style','slider','Pos',[600 150 200 17],...
+   'Min',0,'Max',360,'SliderStep',[1/360 1/360],...
+   'Val',0,'CallBack',['phi=get(slider_phi,''Val'')*pi/180;'...
+   '[p,b1,b2,b3,c1,c2,c3] = compute_configuration_from_xyphi(p(1),p(2),phi,mode,geometry);'...
+   'plot_configuration;']);
+
 %% select start
+phi = 0; % for now, constant orientation
+
 q_start = line('color','c','marker','o','xdata',100,'ydata',100);
 [n_start,x_start,y_start] = g.pick();
 set(q_start,'xdata',x_start,'ydata',y_start);
+[p,b1,b2,b3,c1,c2,c3] = compute_configuration_from_xyphi(x_start,y_start,phi,mode,geometry);
+plot_configuration;
 
 % select goal
 q_goal = line('color','g','marker','o','xdata',100,'ydata',100);
 [n_goal,x_goal,y_goal] = g.pick();
 set(q_goal,'xdata',x_goal,'ydata',y_goal);
+[p,b1,b2,b3,c1,c2,c3] = compute_configuration_from_xyphi(x_start,y_start,phi,mode,geometry);
+plot_configuration;
 
 % compute path as ordered list of nodes
 path_nodes = g.Astar(n_start,n_goal);
